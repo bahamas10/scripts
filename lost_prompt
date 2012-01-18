@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# LOST prompty
+# code has been hashed
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+
+trap true 1 2 3 4 5 6 7 8 15
+code='43b31a333c9b78f0c53d0f392c233581'
+while [[ "$pass" != "$code" ]]; do
+        clear
+	echo -ne "\e[0;32m"
+        read  -p ">: " line
+        pass=$(openssl md5 <<< "$line")
+done

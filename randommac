@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Generate a random mac address
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+
+beginning="${1:-54:52:00}"
+
+echo -n "$beginning"
+
+i=0
+while (( i < 6 )); do
+        rand=$(($RANDOM%16))
+        case $rand in
+                10) var=A;;
+                11) var=B;;
+                12) var=C;;
+                13) var=D;;
+                14) var=E;;
+                15) var=F;;
+                * ) var=$rand;;
+        esac
+        (( $i%2 == 0 )) && echo -n ":"
+        echo -n "$var"
+        (( i++ ))
+done
+echo

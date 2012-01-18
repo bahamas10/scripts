@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+#
+# flactov0
+# Convert flac files to mp3 v0
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Date: 1/1/2012
+
+# check_required_programs()
+#
+# Check for the programs required
+# return 0 if programs are available or a 1 if not.
+check_required_programs() {
+	req_programs=('flac' 'metaflac' 'lame')
+	ret=0
+	for prog in "${req_programs[@]}"; do
+		if ! "$prog" --help &>/dev/null; then
+			echo "Dependency program '$prog' not found." >&2
+			ret=1
+		fi
+	done
+	return "$ret"
+}
+
+# flac_to_v0()
+#
+# Convert a given flac file to mp3
+# $1 - flac file
+# $2 - destination file
+flac_to_v0() {
+	# Convert flac file to mp3 given the full path
+	# To the flac file as $1
+	flac_file="$1"
+	mp3_file="$2"
+
+	# Extract and store all of these tags as variables
+	# (not using associative array to play nice with
+	# BASH_VERSION < 4)
+	tags=('title' 'album' 'artist' 'tracknumber' 'genre' 'comment' 'date')
+	for tag in "${tags[@]}"; do
+		IFS='=' read _ $tag <<< "$(metaflac --show-tag="$tag" "$flac_file")"
+	done
+
+	# Now convert the file
+	flac -dc "$flac_file" |
+		lame -V 0 --vbr-new --add-id3v2 --ignore-tag-errors \
+		--tt "$title" \
+		--tn "$tracknumber" \
+		--tg "$genre" \
+		--ty "$date" \
+		--ta "$artist" \
+		--tl "$album" \
+		--add-id3v2 \
+		- "$mp3_file"
+}
+
+# usage()
+# Print usage
+usage() {
+	cat <<-EOF
+Usage: ${0##*/} SOURCE DEST
+Usage: ${0##*/} SOURCE... DIRECTORY
+
+Source is a flac file and dest is the destination
+file or folder.
+
+Source can be 1 or more flac files, if multiple
+sources are present the final argument must
+be the destination directory.
+EOF
+}
+
+# Main
+check_required_programs || exit 1
+
+# Check minimum arguments
+if (($# < 2)); then
+	usage >&2
+	exit 2
+fi
+
+# Get the last argument
+dest=${!#}
+
+# Remove the last argument from the list of files
+end=$(($# - 1))
+files=( "${@:1:$end}" )
+
+# Check if the last argument is a directory
+is_dir=false
+if [[ -d "$dest" ]]; then
+	is_dir=true
+fi
+
+# dest must be a directory if multiple source files are given
+if (($# > 2)) && ! "$is_dir"; then
+	echo -e "$dest is not a directory!\n" >&2
+	usage >&2
+	exit 3
+fi
+
+# Loop through the files and convert
+for file in "${files[@]}"; do
+	# Get raw filename (basename and extension removal)
+	_a=${file##*/}
+	raw_name=${_a%.*}
+
+	# Create the destination name
+	file_dest=$dest
+	if "$is_dir"; then
+		file_dest="${file_dest}/${raw_name}.mp3"
+	fi
+
+	# Convert it
+	flac_to_v0 "$file" "${file_dest}"
+done

@@ -1,0 +1,69 @@
+#!/usr/bin/env php
+<?php
+/**
+ * rss.php
+ * Parse RSS feeds supplied over the command line
+ * Written by Dave Eddy <dave@daveeddy.com>
+ *
+ * This script comes with no warranty whatsoever
+ */
+
+/* Config Variables */
+date_default_timezone_set('America/Los_Angeles'); // set this to your locale
+
+
+/* No need to edit below this line */
+$site    = @$_SERVER['argv'][1];
+$stories = @$_SERVER['argv'][2];
+
+/**
+ * Converts a Unix time stamp to how long ago it was relative to now
+ * Taken from stackoverflow
+ * http://stackoverflow.com/questions/2981602/twitter-rss-pubdate-format
+ */
+function how_long_ago($unixTime) {
+	$chunks = array(
+		array(60 * 60 * 24 * 365 , 'year'),
+		array(60 * 60 * 24 * 30 , 'month'),
+		array(60 * 60 * 24 * 7, 'week'),
+		array(60 * 60 * 24 , 'day'),
+		array(60 * 60 , 'hour'),
+		array(60 , 'minute'),
+	);
+	$today = time();
+	$since = $today - $unixTime;
+	for ($i = 0, $j = count($chunks); $i < $j; $i++) {
+		$seconds = $chunks[$i][0];
+		$name = $chunks[$i][1];
+		if (($count = floor($since / $seconds)) != 0) {
+			break;
+		}
+	}
+	return $count == 1 ? '1 '.$name : "$count {$name}s";
+}
+
+# Check given paramaters
+if (!isset($site)) {
+	die(sprintf("Usage: php %s <rss feed URL> [# stories]\n", basename(__FILE__)));
+}
+if (!isset($stories)) {
+	$stories = 5;
+}
+
+# Load the dom
+$dom = New DomDocument();
+if (!@$dom->load($site)) {
+	exit(1);
+}
+$items = $dom->getElementsByTagName('item');
+echo $dom->getElementsByTagName('title')->item(0)->nodeValue."\n";
+# Parse the stories
+for ($i=0;$i<$stories;$i++) {
+	if ($i >= $items->length) {
+		continue; // you wanted more stories than the RSS had
+	}
+	$item = $items->item($i);
+	$age = how_long_ago(strtotime($item->getElementsByTagName('pubDate')->item(0)->nodeValue));
+	printf(">> %s (%d ago)\n", $item->getElementsByTagName('title')->item(0)->nodeValue, $age);
+	// echo $item->getElementsByTagName('description')->item(0)->nodeValue."\n";
+}
