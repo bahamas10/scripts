@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Parse di.fm and listen to shoutcast
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Date: 1/28/12
+
+# Save each link in an array
+links=( $(egrep -o 'http://listen\.di\.fm/public3/.*\.pls' < <(curl -s http://www.di.fm/) ) )
+
+echo "${#links} stations found."
+
+# Loop and enumerate the array
+for (( i=0; i<${#links}; i++)); do
+	link=${links[$i]}
+	# Get a clean name of the channel
+	_a=${link##*/}
+	name=${_a%.*}
+
+	echo "$i: $name"
+done
+
+# Get the user input
+read -p "Make a selection: " choice
+
+# Save the pls file and open it
+t=$(mktemp)
+curl "${links[$choice]}" -o "$t"
+xdg-open "$t"
