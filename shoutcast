@@ -23,7 +23,13 @@ done
 # Get the user input
 read -p "Make a selection: " choice
 
+if [[ -n "${links[$choice]}" ]]; then
 # Save the pls file and open it
-t=$(mktemp)
-curl "${links[$choice]}" -o "$t"
-xdg-open "$t"
+	t=$(mktemp)
+	if curl "${links[$choice]}" -o "$t"; then
+		xdg-open "$t"
+	fi
+else
+	echo "Invalid choice ($choice)!" >&2
+	exit 1
+fi
