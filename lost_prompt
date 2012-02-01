@@ -6,7 +6,7 @@
 # Author: Dave Eddy <dave@daveeddy.com>
 
 trap true 1 2 3 4 5 6 7 8 15
-code='43b31a333c9b78f0c53d0f392c233581'
+code='1b62110df55087077ddbaa840a3edf63'
 while [[ "$pass" != "$code" ]]; do
         clear
 	echo -ne "\e[0;32m"
