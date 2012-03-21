@@ -6,7 +6,7 @@
 # Author: Dave Eddy <dave@daveeddy.com>
 
 # Percentage to print on
-threshold=90
+threshold=${1:-90}
 
 df -h
 ret=0
