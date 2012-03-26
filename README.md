@@ -33,6 +33,21 @@ Print df -h and look for mounts over a given percentage used (default 90%).
     tmpfs                 7.9G  212M  7.7G   3% /mnt/chrome-cache
     /dev/sda6 (/) 30%
 
+HDD Temps
+---------
+Get temperature readouts for harddrives (tested on OpenIndiana)
+
+    dave @ [ datadyne :: (SunOS) ] ~ $ ./hdd-temps
+    /dev/rdsk/c3d0s0 :: No temperature found
+    /dev/rdsk/c2t0d0s0 :: 26°C (78.8°F)
+    /dev/rdsk/c2t1d0s0 :: 26°C (78.8°F)
+    /dev/rdsk/c2t2d0s0 :: 26°C (78.8°F)
+    /dev/rdsk/c2t3d0s0 :: 24°C (75.2°F)
+    /dev/rdsk/c2t4d0s0 :: 25°C (77.0°F)
+    /dev/rdsk/c2t5d0s0 :: 26°C (78.8°F)
+    /dev/rdsk/c2t6d0s0 :: 27°C (80.6°F)
+    /dev/rdsk/c2t7d0s0 :: 26°C (78.8°F)
+
 LOST Prompt
 -----------
 Display the prompt from the show lost, you must enter the right code to get out.

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Get disk temperature information
+# Tested on OpenIndiana
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Credit: Mike Zeller <link@conquerthesound.com>
+#         * Original Idea
+# Date: 3/26/12
+# License: BSD 3 clause
+
+#
+# Get the temperature of a drive in celsius
+#
+# $1 = drive path
+#
+# Return the temperature in celsius
+get_temperature() {
+	read id name flag value worst thresh type_ updated when_failed raw_value extra < \
+		<(sudo smartctl -A "$1" | grep "Temperature_Celsius")
+	echo "$raw_value"
+}
+
+#
+# Convert celsius to fahrenheit
+#
+# $1 = celsius
+#
+# Return fahrenheit
+celsius_to_fahrenheit() {
+	bc <<< "1.8 * $1 + 32"
+}
+
+# Loop over the disks and get the temperatures
+while read disk _; do
+	celsius=$(get_temperature "$disk")
+	if [[ -z "$celsius" ]]; then
+		echo "$disk :: No temperature found"
+	else
+		fahrenheit=$(celsius_to_fahrenheit "$celsius")
+		echo "$disk :: ${celsius}°C (${fahrenheit}°F)"
+	fi
+done < <(sudo smartctl --scan)
