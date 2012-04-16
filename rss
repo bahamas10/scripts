@@ -8,11 +8,14 @@
  * This script comes with no warranty whatsoever
  */
 
-/* Config Variables */
+/* Configuration */
+// Locale
 date_default_timezone_set('America/Los_Angeles'); // set this to your locale
+// Print format
+$title_f = "%s\n";
+$story_f = ">> %s (%d ago)\n";
 
-
-/* No need to edit below this line */
+// Command line arguments
 $site    = @$_SERVER['argv'][1];
 $stories = @$_SERVER['argv'][2];
 
@@ -42,28 +45,36 @@ function how_long_ago($unixTime) {
 	return $count == 1 ? '1 '.$name : "$count {$name}s";
 }
 
-# Check given paramaters
+// Check given paramaters
 if (!isset($site)) {
 	die(sprintf("Usage: php %s <rss feed URL> [# stories]\n", basename(__FILE__)));
 }
-if (!isset($stories)) {
+if (!is_numeric($stories)) {
 	$stories = 5;
 }
 
-# Load the dom
+// Load the dom
 $dom = New DomDocument();
 if (!@$dom->load($site)) {
 	exit(1);
 }
+
+// Grab and print the title
+$title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
+printf($title_f, $title);
+
+// Parse the stories
 $items = $dom->getElementsByTagName('item');
-echo $dom->getElementsByTagName('title')->item(0)->nodeValue."\n";
-# Parse the stories
-for ($i=0;$i<$stories;$i++) {
+for ($i = 0; $i < $stories; $i++) {
+	// Check if you are over the array length and bail
 	if ($i >= $items->length) {
-		continue; // you wanted more stories than the RSS had
+		break;
 	}
+	// Grab the story, calculate the age, and get the story
 	$item = $items->item($i);
 	$age = how_long_ago(strtotime($item->getElementsByTagName('pubDate')->item(0)->nodeValue));
-	printf(">> %s (%d ago)\n", $item->getElementsByTagName('title')->item(0)->nodeValue, $age);
-	// echo $item->getElementsByTagName('description')->item(0)->nodeValue."\n";
+	$title = $item->getElementsByTagName('title')->item(0)->nodeValue;
+
+	// Print it
+	printf($story_f, $title, $age);
 }
