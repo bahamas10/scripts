@@ -73,11 +73,6 @@ Parse an rss feed url using php.
     >> Github Account (2 ago)
     >> Puppet Management (5 ago)
 
-Shoutcast
----------
-Screenscrape di.fm for a list of stations, and open one of them in your music player (xdg-open).
-
-
 Copying
 =======
 Released under the BSD 3-clause license, see LICENSE for details.
