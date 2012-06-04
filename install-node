@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# Install node by version from source
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Date: 5/20/2012
+#
+
+version=${1:-v0.6.15}
+repo='git://github.com/joyent/node.git'
+tempdir='/tmp/nodeinstall'
+
+# Global config options
+config_options=()
+
+# OS specific options
+case "$(uname)" in
+	'SunOS')
+		job_num=$(mpstat | wc -l)
+		config_options=("${config_options[@]}" '--with-dtrace')
+		make=gmake
+		;;
+	*)
+		job_num=$(grep -c proc /proc/cpuinfo)
+		make=make
+		;;
+esac
+
+echo "=== Installing node $version ==="
+mkdir -p "$tempdir"
+
+echo "-- Entering $tempdir to clone $repo --"
+cd "$tempdir" || exit 1
+
+# Clone and don't error check because the repo might already be present
+git clone "$repo"
+
+# basename and extension removal
+dir=${repo##*/}; dir=${dir%.git}
+
+echo "-- Entering $dir to conifgure, make (-j $job_num) and install --"
+{
+set -x
+cd "$dir" &&
+git reset --hard HEAD &&
+git fetch &&
+git checkout "$version" &&
+./configure "${config_options[@]}" &&
+"$make" -j$job_num > /dev/null &&
+sudo "$make" install
+set +x
+} || exit 2
