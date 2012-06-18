@@ -8,7 +8,6 @@
 
 version=${1:-v0.6.18}
 repo='git://github.com/joyent/node.git'
-tempdir='/tmp/nodeinstall'
 
 # Global config options
 config_options=()
@@ -19,10 +18,12 @@ case "$(uname)" in
 		job_num=$(mpstat | wc -l)
 		config_options=("${config_options[@]}" '--with-dtrace')
 		make=gmake
+		tempdir='/var/tmp/nodeinstall'
 		;;
 	*)
 		job_num=$(grep -c proc /proc/cpuinfo)
 		make=make
+		tempdir='/tmp/nodeinstall'
 		;;
 esac
 
