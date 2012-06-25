@@ -6,7 +6,7 @@
 # Date: 5/20/2012
 #
 
-version=${1:-v0.6.18}
+version=${1:-v0.8.0}
 repo='git://github.com/joyent/node.git'
 
 # Global config options
@@ -26,6 +26,7 @@ case "$(uname)" in
 		tempdir='/tmp/nodeinstall'
 		;;
 esac
+[[ $(uname -v) =~ joyent* ]] && config_options=("${config_options[@]}" '--prefix=/opt/local')
 
 echo "=== Installing node $version ==="
 mkdir -p "$tempdir"
