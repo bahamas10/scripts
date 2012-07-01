@@ -6,7 +6,7 @@
 # Date: 5/20/2012
 #
 
-version=${1:-v0.8.0}
+version=${1:-v0.8.1}
 repo='git://github.com/joyent/node.git'
 
 # Global config options
@@ -15,7 +15,7 @@ config_options=()
 # OS specific options
 case "$(uname)" in
 	'SunOS')
-		job_num=$(mpstat | wc -l)
+		job_num=$(psrinfo | wc -l)
 		config_options=("${config_options[@]}" '--with-dtrace')
 		make=gmake
 		tempdir='/var/tmp/nodeinstall'
