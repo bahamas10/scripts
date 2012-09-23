@@ -6,7 +6,7 @@
 # Date: 5/20/2012
 #
 
-version=${1:-v0.8.8}
+version=${1:-v0.8.9}
 repo='git://github.com/joyent/node.git'
 
 # Global config options
