@@ -1,9 +1,28 @@
 Scripts
 =======
+
 A handful of scripts I've written.
+
+SmartOS memusage
+----------------
+
+Show memory usage for SmartOS Zones
+
+dave @ [ nexus :: (SunOS) ] ~ # /opt/memusage.sh
+        ALIAS   MEMORY (mb)                             UUID
+       global    92.8398mb / 1.75922e+13mb             -
+           go    46.1484mb / 256mb                     00105c11-fed4-413c-bfac-2da4b9d55667
+       gvoice    43.9414mb / 256mb                     2eab3d6a-7287-41c4-b93e-6b7fac718c47
+     overmind    34.9375mb / 256mb                     b846e24d-734d-4ec5-bded-b57737f453e2
+          ns1    76.9727mb / 256mb                     ca675904-50c8-470d-89e6-63c97d41df3f
+      arbiter    116.551mb / 512mb                     9d4f2dba-583f-4d26-9910-9c455ec0b90a
+       skyevm    364.352mb / 1024mb                    081ae139-a6df-4dfe-b500-cf1eed7479e5
+     porthose     456.75mb / 1024mb                    d0627c90-f603-4467-8f34-37a97f97d078
+
 
 Geo IP
 ------
+
 Get geoip information given a URL or IP.
 
     dave @ [ lifeforce :: (Linux) ] ~/dev/scripts $ ./geoip daveeddy.com
@@ -21,6 +40,7 @@ Get geoip information given a URL or IP.
 
 HD Size
 -------
+
 Print df -h and look for mounts over a given percentage used (default 90%).
 
     dave @ [ lifeforce :: (Linux) ] ~/dev/scripts $ ./hdsize 29
@@ -35,6 +55,7 @@ Print df -h and look for mounts over a given percentage used (default 90%).
 
 HDD Temps
 ---------
+
 Get temperature readouts for harddrives (tested on OpenIndiana)
 
     dave @ [ datadyne :: (SunOS) ] ~ $ ./hdd-temps
@@ -50,10 +71,12 @@ Get temperature readouts for harddrives (tested on OpenIndiana)
 
 LOST Prompt
 -----------
+
 Display the prompt from the show lost, you must enter the right code to get out.
 
 Random MAC
 ----------
+
 Print a random mac address with optional prefix.
 
     dave @ [ lifeforce :: (Linux) ] ~/dev/scripts $ ./randommac
@@ -63,6 +86,7 @@ Print a random mac address with optional prefix.
 
 RSS
 ---
+
 Parse an rss feed url using php.
 
     dave @ [ lifeforce :: (Linux) ] ~/dev/scripts $ ./rss http://daveeddy.com/feed
@@ -75,4 +99,5 @@ Parse an rss feed url using php.
 
 Copying
 =======
+
 Released under the BSD 3-clause license, see LICENSE for details.

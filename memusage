@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# Get memory usage per smartos zone
+#
+# Like zonememstat, with alias
+#
+# Author: Dave Eddy <dave@voxer.com>
+# License: BSD 3-clause
+
+kstat_output=$(kstat -p | grep "physicalmem_zone")
+get_kstat() {
+	grep ":$1:physicalmem_zone_$1:$2" <<< "$kstat_output" | awk '{print $2/1024/1024}'
+}
+printf "%13s %s %-39s %s\n" "ALIAS" " " "MEMORY (mb)" "UUID"
+while read zone uuid alias; do
+	usage=$(get_kstat "$zone" "usage")
+	value=$(get_kstat "$zone" "value")
+
+	printf "%13s %10smb / %-25s %s\n" "$alias" "$usage" "${value}mb" "$uuid"
+done < <(echo '0 - global'; vmadm list -H -o zoneid,uuid,alias)
