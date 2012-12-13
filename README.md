@@ -8,7 +8,7 @@ SmartOS memusage
 
 Show memory usage for SmartOS Zones
 
-dave @ [ nexus :: (SunOS) ] ~ # /opt/memusage.sh
+    dave @ [ nexus :: (SunOS) ] ~ # /opt/memusage.sh
         ALIAS   MEMORY (mb)                             UUID
        global    92.8398mb / 1.75922e+13mb             -
            go    46.1484mb / 256mb                     00105c11-fed4-413c-bfac-2da4b9d55667
