@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+/**
+ * List the interfaces on a machine
+ */
+
+var os = require('os');
+var interfaces = os.networkInterfaces();
+var internal_re = /(^127\.)|(^192\.168\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^::1)$/
+
+var ips = [];
+// Extract the IPs
+Object.keys(interfaces).forEach(function(name) {
+  var ip = interfaces[name][0].address;
+  ips.push(ip);
+});
+
+// Remove localhost
+ips = ips.filter(function(ip) {
+  return ip.indexOf('127.0.0.') !== 0;
+});
+
+if (process.argv[2] === '-a')
+  return console.log(JSON.stringify(ips, null, 2));
+
+// Make the return obj
+var ret = {
+  internal: null,
+  external: []
+};
+ips.forEach(function(ip) {
+  if (internal_re.test(ip)) ret.internal = ip;
+  else ret.external.push(ip);
+});
+
+console.log(JSON.stringify(ret, null, 2));
