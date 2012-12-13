@@ -97,6 +97,19 @@ Parse an rss feed url using php.
     >> Github Account (2 ago)
     >> Puppet Management (5 ago)
 
+Interfaces
+----------
+
+OS Independent memory usage
+
+    dave @ [ dave-01 :: (SunOS) ] ~ $ interfaces
+    {
+      "internal": "192.168.1.1",
+      "external": [
+        "1.2.3.4"
+      ]
+    }
+
 Copying
 =======
 
